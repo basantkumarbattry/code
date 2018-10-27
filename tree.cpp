@@ -1,3 +1,6 @@
+//this code contain all important code related to tree
+// some words have been used like printi -inorder,printl-level order,printp-preorder,printP-post order like that
+
 #include<bits/stdc++.h>
 //#include<map>
 using namespace std;
@@ -334,6 +337,34 @@ int toSumTree( node *node)
 	node->data = toSumTree(node->left) + toSumTree(node->right); 
  
 	return old_val+node->data;
+}
+node* buildTree(int in[], int pre[], int inStrt, 
+                       int inEnd, unordered_map<int, int>& mp) 
+{ 
+    static int preIndex = 0; 
+  
+    if (inStrt > inEnd) 
+        return NULL; 
+
+    int curr = pre[preIndex++]; 
+     node* tNode = f(curr); 
+   
+    if (inStrt == inEnd) 
+        return tNode;  
+    int inIndex = mp[curr]; 
+    tNode->left = buildTree(in, pre, inStrt, inIndex - 1, mp); 
+    tNode->right = buildTree(in, pre, inIndex + 1, inEnd, mp); 
+  
+    return tNode; 
+} 
+
+node* buldTreeWrap(int in[], int pre[], int len) 
+{ 
+    unordered_map<int, int> mp; 
+    for (int i = 0; i < len; i++) 
+        mp[in[i]] = i; 
+  
+    return buildTree(in, pre, 0, len - 1, mp); 
 } 
 int main()
 {
@@ -395,6 +426,11 @@ int main()
 	int tt=maxleaf(n,0);
 	cout<<tt<<endl;
 	toSumTree(n);
-	
+	int in[] = { 12,34,76,43,90,45,60 }; 
+    	int pre[] = { 76,34,12,43,60,90,45}; 
+    	int len = sizeof(in) / sizeof(in[0]); 
+  
+    	node *root2 = buldTreeWrap(in, pre, len); 
+	printi(root2);
 }
 
